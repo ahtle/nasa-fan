@@ -2,21 +2,24 @@ import { ApodCard } from "@/components/apod-card";
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col items-center bg-zinc-50 px-4 py-12 font-sans dark:bg-black sm:px-6">
-      <header className="mb-10 max-w-3xl text-center">
-        <p className="text-sm font-medium uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
-          nasa-fan
-        </p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl">
-          NASA Fan
-        </h1>
-        <p className="mt-4 text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-          A Next.js starter with TypeScript and TanStack Query, powered by
-          NASA&apos;s open APIs.
-        </p>
-      </header>
-
-      <ApodCard />
+    <div className="flex flex-1 flex-col items-center gap-y-4 md:gap-y-8 pb-4 md:pb-8">
+      <section
+        className="flex justify-center w-full min-h-[40vh] bg-cover md:min-h-[50vh]
+          p-4 md:p-8 text-white"
+        style={{ backgroundImage: "url('/hero.png')" }}
+      >
+        <div className="page-w-container">
+          <div className="w-[200px] md:w-[300px] p-2 md:p-4 bg-[#212121]">
+            <p className="text-lg font-medium md:text-xl">
+              A page for NASA fans. Explore the latest images and videos from
+              NASA.
+            </p>
+          </div>
+        </div>
+      </section>
+      <div className="page-container">
+        <ApodCard />
+      </div>
     </div>
   );
 }

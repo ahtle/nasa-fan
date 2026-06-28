@@ -1,0 +1,11 @@
+@reference "../../app/globals.css";
+
+.nav-item {
+  @apply font-semibold text-[#666] underline underline-offset-6 decoration-transparent decoration-4
+    hover:text-nasa-blue active:text-nasa-blue hover:decoration-nasa-light-blue
+    focus-visible:text-nasa-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-nasa-light-blue focus-visible:outline-offset-2;
+}
+
+.nav-item[aria-current="page"] {
+  @apply text-nasa-blue decoration-nasa-light-blue;
+}
