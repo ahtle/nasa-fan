@@ -20,7 +20,6 @@ export default function FiltersSection({
         value={filterState.search}
         onChange={(search) => setFilterState((prev) => ({ ...prev, search }))}
       />
-      <p>{filterState.search}</p>
     </div>
   );
 }

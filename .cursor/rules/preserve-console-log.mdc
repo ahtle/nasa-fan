@@ -1,0 +1,12 @@
+---
+description: Do not remove console.log unless the user asks
+alwaysApply: true
+---
+
+# Preserve console.log
+
+Do not delete, comment out, or replace existing `console.log` calls while making other changes.
+
+Only remove or clean up `console.log` when the user explicitly asks (e.g. "remove console.logs", "clean up debug logs").
+
+When adding new code, avoid introducing unnecessary `console.log` unless useful for the task — but leave existing ones intact.

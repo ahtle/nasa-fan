@@ -1,3 +1,11 @@
+# NASA Fan
+
+Next.js app for NASA's Astronomy Picture of the Day and image gallery search.
+
+## Conventions
+
+Coding standards and agent behavior live in `.cursor/rules/`. Add new rules there instead of growing this file.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
