@@ -71,13 +71,14 @@ function pickImageUrl(links: NasaImageLibraryLink[] = []): string {
   const bySuffix = (suffix: string) =>
     links.find((link) => link.href.includes(suffix))?.href;
 
+  // Prefer web-friendly renditions; ~orig files are often too large for Next.js image optimization.
   return (
-    byRel("canonical") ??
-    bySuffix("~orig") ??
     bySuffix("~large") ??
     bySuffix("~medium") ??
     byRel("preview") ??
     bySuffix("~thumb") ??
+    byRel("canonical") ??
+    bySuffix("~orig") ??
     links[0]?.href ??
     ""
   );

@@ -1,21 +1,31 @@
+"use client";
+
 import { NasaImage } from "@/lib/nasa";
 import Image from "next/image";
 
 interface ResultCardProps extends NasaImage {
   priority?: boolean;
+  onSelect: () => void;
 }
 
 export default function ResultCard({
   priority = false,
+  onSelect,
   ...props
 }: ResultCardProps) {
   return (
     <article className="w-full min-w-0 overflow-hidden rounded border border-zinc-200 bg-white shadow-sm">
       <div className="gap-2 p-3">
-        <p className="text-nasa-blue">{props.title}</p>
+        <button
+          type="button"
+          onClick={onSelect}
+          className="cursor-pointer text-left text-nasa-blue hover:underline"
+        >
+          {props.title}
+        </button>
         <p className="text-sm text-zinc-500">{props.dateCreated}</p>
       </div>
-      <div className="relative w-full h-[300px]">
+      <div className="relative h-[300px] w-full">
         <Image
           src={props.thumbnailUrl}
           alt={props.title}
