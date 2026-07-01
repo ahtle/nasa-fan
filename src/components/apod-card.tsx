@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import BaseButton from "@/components/buttons/base-button";
 import { fetchApod } from "@/lib/nasa";
 
 export function ApodCard() {
@@ -23,13 +24,13 @@ export function ApodCard() {
       <div className="w-full min-w-0 max-w-3xl rounded-2xl border border-red-200 bg-red-50 p-8">
         <p className="font-medium text-red-700">Failed to load APOD</p>
         <p className="mt-2 text-sm text-red-600">{error.message}</p>
-        <button
-          type="button"
+        <BaseButton
+          variant="destructive"
+          className="mt-4"
           onClick={() => refetch()}
-          className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500"
         >
           Try again
-        </button>
+        </BaseButton>
       </div>
     );
   }

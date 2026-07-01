@@ -64,6 +64,7 @@ type NasaImageLibrarySearchResponse = {
 
 const NASA_API_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY ?? "DEMO_KEY";
 const NASA_IMAGE_LIBRARY_URL = "https://images-api.nasa.gov/search";
+export const NASA_IMAGE_SEARCH_PAGE_SIZE = 24;
 
 function pickImageUrl(links: NasaImageLibraryLink[] = []): string {
   const byRel = (rel: string) => links.find((link) => link.rel === rel)?.href;
@@ -116,7 +117,7 @@ export async function fetchApod(): Promise<ApodResponse> {
 export async function searchNasaImages({
   q,
   page = 1,
-  pageSize = 24,
+  pageSize = NASA_IMAGE_SEARCH_PAGE_SIZE,
 }: NasaImageSearchParams): Promise<NasaImageSearchResponse> {
   const { data } = await axios.get<NasaImageLibrarySearchResponse>(
     NASA_IMAGE_LIBRARY_URL,
