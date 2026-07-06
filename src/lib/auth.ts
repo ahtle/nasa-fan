@@ -1,13 +1,11 @@
-import axios, { isAxiosError } from "axios";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+import { api } from "@/lib/api";
 
 interface LoginDTO {
   email: string;
   password: string;
 }
 
-interface User {
+export interface User {
   id: number;
   email: string;
 }
@@ -21,15 +19,14 @@ export async function login({
   email,
   password,
 }: LoginDTO): Promise<LoginResponse> {
-  try {
-    const payload = { email, password };
-    const { data } = await axios.post(`${API_URL}/auth/login`, payload);
-    return data;
-  } catch (error) {
-    if (isAxiosError<{ message?: string }>(error)) {
-      throw new Error(error.response?.data?.message ?? error.message);
-    }
+  const { data } = await api.post<LoginResponse>("/auth/login", {
+    email,
+    password,
+  });
+  return data;
+}
 
-    throw error;
-  }
+export async function getMe(): Promise<User> {
+  const { data } = await api.get<User>("/auth/me");
+  return data;
 }

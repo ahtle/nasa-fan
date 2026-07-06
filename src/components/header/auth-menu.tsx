@@ -1,13 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "@/lib/auth";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { clearAccessToken, hasAccessToken, setAccessToken } from "@/lib/api";
+import { getMe, login } from "@/lib/auth";
 import ButtonBase from "@/components/buttons/button-base";
 import LoginModal from "./login-modal";
 
+function useHasMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+}
+
 export function AuthMenu() {
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const hasMounted = useHasMounted();
   const [loginOpen, setLoginOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -38,17 +48,26 @@ export function AuthMenu() {
     };
   }, [menuOpen]);
 
+  const sessionQuery = useQuery({
+    queryKey: ["auth", "me"],
+    queryFn: getMe,
+    enabled: hasMounted && hasAccessToken(),
+    retry: false,
+  });
+
   const loginMutation = useMutation({
     mutationFn: login,
-    onSuccess: (data, { email }) => {
+    onSuccess: (data) => {
       console.log(data);
-      setUserEmail(email);
+      setAccessToken(data.accessToken);
+      queryClient.setQueryData(["auth", "me"], data.user);
       setLoginOpen(false);
     },
   });
 
   const handleLogout = () => {
-    setUserEmail(null);
+    clearAccessToken();
+    queryClient.removeQueries({ queryKey: ["auth", "me"] });
     setMenuOpen(false);
   };
 
@@ -61,7 +80,15 @@ export function AuthMenu() {
     setLoginOpen(false);
   };
 
-  if (userEmail) {
+  const user = sessionQuery.data;
+  const isAuthLoading =
+    !hasMounted || (hasAccessToken() && sessionQuery.isPending);
+
+  if (isAuthLoading) {
+    return null;
+  }
+
+  if (user) {
     return (
       <div className="relative" ref={menuRef}>
         <button
@@ -73,7 +100,7 @@ export function AuthMenu() {
           aria-haspopup="menu"
           onClick={() => setMenuOpen((open) => !open)}
         >
-          {userEmail}
+          {user.email}
         </button>
 
         {menuOpen ? (
