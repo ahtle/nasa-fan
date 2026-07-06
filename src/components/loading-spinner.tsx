@@ -1,12 +1,16 @@
-interface LoadingSpinnerProps {
+"use client";
+
+import { useAppSelector } from "@/stores/hooks";
+
+interface SpinnerContentProps {
   label?: string;
   className?: string;
 }
 
-export default function LoadingSpinner({
+function SpinnerContent({
   label = "Loading…",
   className = "",
-}: LoadingSpinnerProps) {
+}: SpinnerContentProps) {
   return (
     <div
       role="status"
@@ -19,4 +23,41 @@ export default function LoadingSpinner({
       <span className="text-sm text-zinc-600">{label}</span>
     </div>
   );
+}
+
+interface InlineLoadingSpinnerProps extends SpinnerContentProps {
+  global?: false;
+}
+
+interface GlobalLoadingSpinnerProps {
+  global: true;
+  label?: string;
+}
+
+type LoadingSpinnerProps = InlineLoadingSpinnerProps | GlobalLoadingSpinnerProps;
+
+function GlobalLoadingSpinner({ label }: { label?: string }) {
+  const loading = useAppSelector((state) => state.main.loading);
+
+  if (!loading) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70">
+      <SpinnerContent label={label} />
+    </div>
+  );
+}
+
+export default function LoadingSpinner({
+  global,
+  label,
+  className,
+}: LoadingSpinnerProps) {
+  if (global) {
+    return <GlobalLoadingSpinner label={label} />;
+  }
+
+  return <SpinnerContent label={label} className={className} />;
 }

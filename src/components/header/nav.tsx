@@ -15,7 +15,7 @@ export function Nav() {
   const currentPath = usePathname();
 
   return (
-    <nav className="flex items-center gap-2">
+    <nav className="inline-flex items-center gap-2">
       {navItems.map((item) => {
         const isActive = currentPath && currentPath.startsWith(item.href);
 

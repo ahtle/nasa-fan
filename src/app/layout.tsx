@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Header } from "@/components/header/header";
+import LoadingSpinner from "@/components/loading-spinner";
 import { QueryProvider } from "@/providers/query-provider";
+import StoreProviders from "@/providers/store-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,10 +32,13 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        <QueryProvider>
-          <Header />
-          <main className="font-sans ">{children}</main>
-        </QueryProvider>
+        <StoreProviders>
+          <LoadingSpinner global />
+          <QueryProvider>
+            <Header />
+            <main className="font-sans ">{children}</main>
+          </QueryProvider>
+        </StoreProviders>
       </body>
     </html>
   );

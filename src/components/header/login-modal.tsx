@@ -4,7 +4,6 @@ import { SubmitEvent, useState } from "react";
 import ButtonBase from "@/components/buttons/button-base";
 import InputEmail from "@/components/inputs/input-email";
 import InputPassword from "@/components/inputs/input-password";
-import LoadingSpinner from "@/components/loading-spinner";
 import BaseModal from "@/components/modal/base-modal";
 import { isValidEmail } from "@/utils/validation-utils";
 
@@ -69,8 +68,6 @@ export default function LoginModal({
           Log in
         </ButtonBase>
       </form>
-
-      {isLoading && <LoadingSpinner label="Logging in…" />}
     </BaseModal>
   );
 }

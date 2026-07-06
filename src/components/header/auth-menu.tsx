@@ -1,11 +1,19 @@
 "use client";
 
+// lib
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { clearAccessToken, hasAccessToken, setAccessToken } from "@/lib/api";
 import { getMe, login } from "@/lib/auth";
+
+// store
+import { useAppDispatch } from "@/stores/hooks";
+import { setLoading } from "@/stores/main-slice";
+
+// components
 import ButtonBase from "@/components/buttons/button-base";
 import LoginModal from "./login-modal";
+import styles from "./nav.module.css";
 
 function useHasMounted() {
   return useSyncExternalStore(
@@ -16,6 +24,7 @@ function useHasMounted() {
 }
 
 export function AuthMenu() {
+  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   const hasMounted = useHasMounted();
   const [loginOpen, setLoginOpen] = useState(false);
@@ -58,12 +67,15 @@ export function AuthMenu() {
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      console.log(data);
       setAccessToken(data.accessToken);
       queryClient.setQueryData(["auth", "me"], data.user);
       setLoginOpen(false);
     },
   });
+
+  useEffect(() => {
+    dispatch(setLoading(loginMutation.isPending));
+  }, [dispatch, loginMutation.isPending]);
 
   const handleLogout = () => {
     clearAccessToken();
@@ -93,14 +105,13 @@ export function AuthMenu() {
       <div className="relative" ref={menuRef}>
         <button
           type="button"
-          className="max-w-[12rem] truncate font-semibold text-nasa-blue cursor-pointer
-            hover:underline hover:decoration-2 hover:decoration-nasa-light-blue
-            focus-visible:text-nasa-blue focus-visible:outline-2 focus-visible:outline-nasa-light-blue focus-visible:outline-offset-2"
+          className={styles["auth-menu-trigger"]}
+          title={user.email}
           aria-expanded={menuOpen}
           aria-haspopup="menu"
           onClick={() => setMenuOpen((open) => !open)}
         >
-          {user.email}
+          <span className={styles["auth-menu-label"]}>{user.email}</span>
         </button>
 
         {menuOpen ? (
