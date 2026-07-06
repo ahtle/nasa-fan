@@ -1,26 +1,26 @@
 import { ChangeEvent } from "react";
 
-type BaseInputSharedProps = {
+type InputBaseSharedProps = {
   id: string;
   label?: string;
   placeholder?: string;
 };
 
-type BaseTextInputProps = BaseInputSharedProps & {
+type InputBaseTextProps = InputBaseSharedProps & {
   type?: "text";
   value: string;
   onChange: (value: string) => void;
 };
 
-type BaseNumberInputProps = BaseInputSharedProps & {
+type InputBaseNumberProps = InputBaseSharedProps & {
   type: "number";
   value: number;
   onChange: (value: number) => void;
 };
 
-type BaseInputProps = BaseTextInputProps | BaseNumberInputProps;
+type InputBaseProps = InputBaseTextProps | InputBaseNumberProps;
 
-export default function BaseInput(props: BaseInputProps) {
+export default function InputBase(props: InputBaseProps) {
   const { id, label, placeholder, value, ...rest } = props;
   const type = props.type ?? "text";
 

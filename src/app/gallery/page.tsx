@@ -6,7 +6,7 @@ import { FilterState } from "./typing";
 import { NASA_IMAGE_SEARCH_PAGE_SIZE, searchNasaImages } from "@/lib/nasa";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import LoadingSpinner from "@/components/loading-spinner";
-import BaseButton from "@/components/buttons/base-button";
+import ButtonBase from "@/components/buttons/button-base";
 import FiltersSection from "./filters-section";
 import GalleryPagination from "./gallery-pagination";
 import ResultGallery from "./result-gallery";
@@ -80,13 +80,13 @@ export default function GalleryPage() {
           <div className="rounded-2xl border border-red-200 bg-red-50 p-8">
             <p className="font-medium text-red-700">Failed to load images</p>
             <p className="mt-2 text-sm text-red-600">{error.message}</p>
-            <BaseButton
+            <ButtonBase
               variant="destructive"
               className="mt-4"
               onClick={() => refetch()}
             >
               Try again
-            </BaseButton>
+            </ButtonBase>
           </div>
         )}
 

@@ -1,4 +1,4 @@
-import BaseButton from "@/components/buttons/base-button";
+import ButtonBase from "@/components/buttons/button-base";
 
 interface GalleryPaginationProps {
   page: number;
@@ -26,21 +26,21 @@ export default function GalleryPagination({
       aria-label="Gallery pagination"
       className="flex items-center justify-center gap-4 pt-2"
     >
-      <BaseButton
+      <ButtonBase
         onClick={() => onPageChange(page - 1)}
         disabled={disabled || !hasPreviousPage}
       >
         Previous
-      </BaseButton>
+      </ButtonBase>
       <p className="text-sm text-zinc-500">
         Page {page} of {totalPages}
       </p>
-      <BaseButton
+      <ButtonBase
         onClick={() => onPageChange(page + 1)}
         disabled={disabled || !hasNextPage}
       >
         Next
-      </BaseButton>
+      </ButtonBase>
     </nav>
   );
 }

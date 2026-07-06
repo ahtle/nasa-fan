@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import BaseButton from "@/components/buttons/base-button";
+import ButtonBase from "@/components/buttons/button-base";
 import { fetchApod } from "@/lib/nasa";
 
 export function ApodCard() {
@@ -24,13 +24,13 @@ export function ApodCard() {
       <div className="w-full min-w-0 max-w-3xl rounded-2xl border border-red-200 bg-red-50 p-8">
         <p className="font-medium text-red-700">Failed to load APOD</p>
         <p className="mt-2 text-sm text-red-600">{error.message}</p>
-        <BaseButton
+        <ButtonBase
           variant="destructive"
           className="mt-4"
           onClick={() => refetch()}
         >
           Try again
-        </BaseButton>
+        </ButtonBase>
       </div>
     );
   }
@@ -47,7 +47,7 @@ export function ApodCard() {
       {data.media_type === "image" ? (
         <div className="relative aspect-video w-full bg-zinc-100">
           <Image
-            src={data.hdurl ?? data.url}
+            src={data.url}
             alt={data.title}
             fill
             className="object-cover"

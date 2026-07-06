@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AuthMenu } from "./auth-menu";
 import { Nav } from "./nav";
 
 export function Header() {
@@ -18,7 +19,10 @@ export function Header() {
           </div>
         </Link>
 
-        <Nav />
+        <div className="flex items-center gap-4">
+          <Nav />
+          <AuthMenu />
+        </div>
       </div>
     </header>
   );
