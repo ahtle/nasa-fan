@@ -51,8 +51,6 @@ export default function GalleryPage() {
     ? Math.max(1, Math.ceil(data.total / NASA_IMAGE_SEARCH_PAGE_SIZE))
     : 1;
 
-  console.log(data);
-
   return (
     <div className="page-container">
       <div className="w-full space-y-2 md:space-y-4">

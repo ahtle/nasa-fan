@@ -30,10 +30,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        <Header />
-        <main className="font-sans ">
-          <QueryProvider>{children}</QueryProvider>
-        </main>
+        <QueryProvider>
+          <Header />
+          <main className="font-sans ">{children}</main>
+        </QueryProvider>
       </body>
     </html>
   );

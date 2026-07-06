@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/lib/auth";
 import ButtonBase from "@/components/buttons/button-base";
-import { LoginModal } from "./login-modal";
+import LoginModal from "./login-modal";
 
 export function AuthMenu() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -36,13 +38,26 @@ export function AuthMenu() {
     };
   }, [menuOpen]);
 
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data, { email }) => {
+      console.log(data);
+      setUserEmail(email);
+      setLoginOpen(false);
+    },
+  });
+
   const handleLogout = () => {
     setUserEmail(null);
     setMenuOpen(false);
   };
 
   const handleSubmit = (email: string, password: string) => {
-    setUserEmail(email);
+    loginMutation.mutate({ email, password });
+  };
+
+  const handleCloseModal = () => {
+    loginMutation.reset();
     setLoginOpen(false);
   };
 
@@ -86,7 +101,9 @@ export function AuthMenu() {
       {loginOpen && (
         <LoginModal
           open
-          onClose={() => setLoginOpen(false)}
+          errorMessage={loginMutation.error?.message}
+          isLoading={loginMutation.isPending}
+          onClose={handleCloseModal}
           onSubmit={handleSubmit}
         />
       )}

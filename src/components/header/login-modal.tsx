@@ -4,16 +4,25 @@ import { SubmitEvent, useState } from "react";
 import ButtonBase from "@/components/buttons/button-base";
 import InputEmail from "@/components/inputs/input-email";
 import InputPassword from "@/components/inputs/input-password";
+import LoadingSpinner from "@/components/loading-spinner";
 import BaseModal from "@/components/modal/base-modal";
 import { isValidEmail } from "@/utils/validation-utils";
 
 interface LoginModalProps {
+  errorMessage?: string;
   open: boolean;
+  isLoading?: boolean;
   onClose: () => void;
   onSubmit: (email: string, password: string) => void;
 }
 
-export function LoginModal({ open, onClose, onSubmit }: LoginModalProps) {
+export default function LoginModal({
+  open,
+  errorMessage = "",
+  isLoading = false,
+  onClose,
+  onSubmit,
+}: LoginModalProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const canSubmit = isValidEmail(email) && password.length >= 3;
@@ -24,6 +33,10 @@ export function LoginModal({ open, onClose, onSubmit }: LoginModalProps) {
   };
 
   const handleClose = () => {
+    if (isLoading) {
+      return;
+    }
+
     clearForm();
     onClose();
   };
@@ -31,13 +44,14 @@ export function LoginModal({ open, onClose, onSubmit }: LoginModalProps) {
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit(email, password);
-    clearForm();
-    onClose();
   };
 
   return (
     <BaseModal open={open} onClose={handleClose} title="Log in">
       <form className="space-y-4" onSubmit={handleSubmit}>
+        {errorMessage ? (
+          <p className="text-sm text-red-600">{errorMessage}</p>
+        ) : null}
         <InputEmail
           id="login-email"
           label="Email"
@@ -55,6 +69,8 @@ export function LoginModal({ open, onClose, onSubmit }: LoginModalProps) {
           Log in
         </ButtonBase>
       </form>
+
+      {isLoading && <LoadingSpinner label="Logging in…" />}
     </BaseModal>
   );
 }
