@@ -2,11 +2,21 @@
 
 import { useState } from "react";
 import { NasaImage, NasaImageSearchResponse } from "@/lib/nasa";
+import { useCreateSearchFav } from "@/hooks/use-create-search-fav";
+import { useSearchFavoriteIds } from "@/hooks/use-search-favorite-ids";
 import ImageDetailModal from "./image-detail-modal";
 import ResultCard from "./result-card";
 
 export default function ResultGallery(props: NasaImageSearchResponse) {
   const [selectedImage, setSelectedImage] = useState<NasaImage | null>(null);
+  const { mutate } = useCreateSearchFav();
+  const { data: favoriteIdsData } = useSearchFavoriteIds();
+  const favoriteIds = new Set(favoriteIdsData?.nasaIds ?? []);
+
+  const createSearchFav = (payload: NasaImage) => {
+    if (favoriteIds.has(payload.nasaId)) return;
+    mutate(payload);
+  };
 
   return (
     <>
@@ -15,7 +25,9 @@ export default function ResultGallery(props: NasaImageSearchResponse) {
           <ResultCard
             key={item.nasaId}
             priority={index === 0}
+            filled={favoriteIds.has(item.nasaId)}
             onSelect={() => setSelectedImage(item)}
+            onFavoriteClick={() => createSearchFav(item)}
             {...item}
           />
         ))}

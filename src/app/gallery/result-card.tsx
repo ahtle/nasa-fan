@@ -6,12 +6,16 @@ import Image from "next/image";
 
 interface ResultCardProps extends NasaImage {
   priority?: boolean;
+  filled?: boolean;
+  onFavoriteClick: () => void;
   onSelect: () => void;
 }
 
 export default function ResultCard({
   priority = false,
+  filled = false,
   onSelect,
+  onFavoriteClick,
   ...props
 }: ResultCardProps) {
   return (
@@ -27,7 +31,11 @@ export default function ResultCard({
           </button>
           <p className="text-sm text-zinc-500">{props.dateCreated}</p>
         </div>
-        <ButtonStar className="shrink-0" />
+        <ButtonStar
+          className="shrink-0"
+          filled={filled}
+          onClick={onFavoriteClick}
+        />
       </div>
       <div className="relative h-[300px] w-full">
         <Image

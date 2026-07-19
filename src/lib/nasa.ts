@@ -1,5 +1,11 @@
 import axios from "axios";
+import { api } from "@/lib/api";
 
+const NASA_API_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY ?? "DEMO_KEY";
+const NASA_IMAGE_LIBRARY_URL = "https://images-api.nasa.gov/search";
+export const NASA_IMAGE_SEARCH_PAGE_SIZE = 24;
+
+// APOD
 export type ApodResponse = {
   date: string;
   title: string;
@@ -9,6 +15,17 @@ export type ApodResponse = {
   hdurl?: string;
   copyright?: string;
 };
+
+export async function fetchApod(): Promise<ApodResponse> {
+  const { data } = await axios.get<ApodResponse>(
+    "https://api.nasa.gov/planetary/apod",
+    { params: { api_key: NASA_API_KEY } },
+  );
+
+  return data;
+}
+
+// search images
 
 export type NasaImageSearchParams = {
   q: string;
@@ -62,10 +79,6 @@ type NasaImageLibrarySearchResponse = {
   };
 };
 
-const NASA_API_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY ?? "DEMO_KEY";
-const NASA_IMAGE_LIBRARY_URL = "https://images-api.nasa.gov/search";
-export const NASA_IMAGE_SEARCH_PAGE_SIZE = 24;
-
 function pickImageUrl(links: NasaImageLibraryLink[] = []): string {
   const byRel = (rel: string) => links.find((link) => link.rel === rel)?.href;
   const bySuffix = (suffix: string) =>
@@ -93,8 +106,7 @@ function toNasaImage(item: NasaImageLibraryItem): NasaImage | null {
 
   const links = item.links ?? [];
   const thumbnailUrl =
-    links.find((link) => link.rel === "preview")?.href ??
-    pickImageUrl(links);
+    links.find((link) => link.rel === "preview")?.href ?? pickImageUrl(links);
 
   return {
     nasaId: metadata.nasa_id,
@@ -104,15 +116,6 @@ function toNasaImage(item: NasaImageLibraryItem): NasaImage | null {
     thumbnailUrl,
     imageUrl: pickImageUrl(links),
   };
-}
-
-export async function fetchApod(): Promise<ApodResponse> {
-  const { data } = await axios.get<ApodResponse>(
-    "https://api.nasa.gov/planetary/apod",
-    { params: { api_key: NASA_API_KEY } },
-  );
-
-  return data;
 }
 
 export async function searchNasaImages({
@@ -140,6 +143,27 @@ export async function searchNasaImages({
     total: data.collection.metadata?.total_hits ?? images.length,
     images,
     page,
-    hasNextPage: data.collection.links?.some((link) => link.rel === "next") ?? false,
+    hasNextPage:
+      data.collection.links?.some((link) => link.rel === "next") ?? false,
   };
 }
+
+// create search fav
+export const createSearchFavorite = async (
+  payload: NasaImage,
+): Promise<NasaImage> => {
+  const { data } = await api.post<NasaImage>("/search-favorites/", payload);
+  return data;
+};
+
+// get Fav IDs
+
+export type SearchFavoriteIdsResponse = { nasaIds: string[] };
+
+export const getSearchFavoriteIds =
+  async (): Promise<SearchFavoriteIdsResponse> => {
+    const { data } = await api.get<SearchFavoriteIdsResponse>(
+      "/search-favorites/ids/",
+    );
+    return data;
+  };

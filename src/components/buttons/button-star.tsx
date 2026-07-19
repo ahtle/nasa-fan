@@ -4,19 +4,18 @@ import { ButtonHTMLAttributes, useState } from "react";
 import ButtonIcon from "@/components/buttons/button-icon";
 import SvgStar from "@/components/svgs/svg-star";
 
-interface ButtonStarProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+interface ButtonStarProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "children"
+> {
   filled?: boolean;
   defaultFilled?: boolean;
-  onFilledChange?: (filled: boolean) => void;
 }
 
 export default function ButtonStar({
   filled: filledProp,
   defaultFilled = false,
-  onFilledChange,
   className = "",
-  onClick,
   ...props
 }: ButtonStarProps) {
   const [uncontrolledFilled, setUncontrolledFilled] = useState(defaultFilled);
@@ -28,18 +27,6 @@ export default function ButtonStar({
       aria-label={filled ? "Unfavorite" : "Favorite"}
       aria-pressed={filled}
       className={className}
-      onClick={(event) => {
-        onClick?.(event);
-        if (event.defaultPrevented) {
-          return;
-        }
-
-        const next = !filled;
-        if (!isControlled) {
-          setUncontrolledFilled(next);
-        }
-        onFilledChange?.(next);
-      }}
       {...props}
     >
       <SvgStar

@@ -2,21 +2,18 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { hasAccessToken } from "@/lib/api";
-import { authMeQueryKey, getMe } from "@/lib/auth";
+import { getSearchFavoriteIds } from "@/lib/nasa";
 import { useHasMounted } from "@/hooks/use-has-mounted";
 
-export function useMe() {
+export const searchFavoriteIdsQueryKey = ["search-favorites", "ids"] as const;
+
+export function useSearchFavoriteIds() {
   const hasMounted = useHasMounted();
 
-  const query = useQuery({
-    queryKey: authMeQueryKey,
-    queryFn: getMe,
+  return useQuery({
+    queryKey: searchFavoriteIdsQueryKey,
+    queryFn: getSearchFavoriteIds,
     enabled: hasMounted && hasAccessToken(),
     retry: false,
   });
-
-  const isAuthLoading =
-    !hasMounted || (hasAccessToken() && query.isPending);
-
-  return { ...query, isAuthLoading };
 }
