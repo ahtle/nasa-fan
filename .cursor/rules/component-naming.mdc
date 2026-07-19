@@ -1,0 +1,25 @@
+---
+description: Component naming — general to specific (ButtonIcon, SvgStar)
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Component naming
+
+Name components from least descriptive (most general) to most specific.
+
+The leftmost part is the broader category; each following part narrows it down.
+
+```ts
+// Prefer
+ButtonIcon   // Button > Icon
+ButtonStar   // Button > Star
+SvgStar      // Svg > Star
+
+// Avoid
+IconButton   // Icon before Button
+StarButton   // Star before Button
+StarSvg      // Star before Svg
+```
+
+File names follow the same order in kebab-case: `button-icon.tsx`, `button-star.tsx`, `svg-star.tsx`.

@@ -1,10 +1,11 @@
 "use client";
 
 // lib
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { clearAccessToken, hasAccessToken, setAccessToken } from "@/lib/api";
-import { getMe, login } from "@/lib/auth";
+import { useEffect, useRef, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { clearAccessToken, setAccessToken } from "@/lib/api";
+import { authMeQueryKey, login } from "@/lib/auth";
+import { useMe } from "@/hooks/use-me";
 
 // store
 import { useAppDispatch } from "@/stores/hooks";
@@ -15,18 +16,10 @@ import ButtonBase from "@/components/buttons/button-base";
 import LoginModal from "./login-modal";
 import styles from "./nav.module.css";
 
-function useHasMounted() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-}
-
 export function AuthMenu() {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-  const hasMounted = useHasMounted();
+  const { data: user, isAuthLoading } = useMe();
   const [loginOpen, setLoginOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -57,18 +50,11 @@ export function AuthMenu() {
     };
   }, [menuOpen]);
 
-  const sessionQuery = useQuery({
-    queryKey: ["auth", "me"],
-    queryFn: getMe,
-    enabled: hasMounted && hasAccessToken(),
-    retry: false,
-  });
-
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
       setAccessToken(data.accessToken);
-      queryClient.setQueryData(["auth", "me"], data.user);
+      queryClient.setQueryData(authMeQueryKey, data.user);
       setLoginOpen(false);
     },
   });
@@ -79,7 +65,7 @@ export function AuthMenu() {
 
   const handleLogout = () => {
     clearAccessToken();
-    queryClient.removeQueries({ queryKey: ["auth", "me"] });
+    queryClient.removeQueries({ queryKey: authMeQueryKey });
     setMenuOpen(false);
   };
 
@@ -91,10 +77,6 @@ export function AuthMenu() {
     loginMutation.reset();
     setLoginOpen(false);
   };
-
-  const user = sessionQuery.data;
-  const isAuthLoading =
-    !hasMounted || (hasAccessToken() && sessionQuery.isPending);
 
   if (isAuthLoading) {
     return null;

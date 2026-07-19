@@ -30,3 +30,5 @@ export async function getMe(): Promise<User> {
   const { data } = await api.get<User>("/auth/me");
   return data;
 }
+
+export const authMeQueryKey = ["auth", "me"] as const;

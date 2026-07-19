@@ -1,5 +1,6 @@
 "use client";
 
+import ButtonStar from "@/components/buttons/button-star";
 import { NasaImage } from "@/lib/nasa";
 import Image from "next/image";
 
@@ -15,15 +16,18 @@ export default function ResultCard({
 }: ResultCardProps) {
   return (
     <article className="w-full min-w-0 overflow-hidden rounded border border-zinc-200 bg-white shadow-sm">
-      <div className="gap-2 p-3">
-        <button
-          type="button"
-          onClick={onSelect}
-          className="cursor-pointer text-left text-nasa-blue hover:underline"
-        >
-          {props.title}
-        </button>
-        <p className="text-sm text-zinc-500">{props.dateCreated}</p>
+      <div className="flex items-start justify-between gap-2 p-3">
+        <div className="min-w-0">
+          <button
+            type="button"
+            onClick={onSelect}
+            className="cursor-pointer text-left text-nasa-blue hover:underline"
+          >
+            {props.title}
+          </button>
+          <p className="text-sm text-zinc-500">{props.dateCreated}</p>
+        </div>
+        <ButtonStar className="shrink-0" />
       </div>
       <div className="relative h-[300px] w-full">
         <Image

@@ -1,4 +1,6 @@
 import axios, { isAxiosError } from "axios";
+import { getQueryClient } from "@/lib/query-client";
+import { authMeQueryKey } from "@/lib/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
 const ACCESS_TOKEN_KEY = "accessToken";
@@ -51,6 +53,12 @@ api.interceptors.response.use(
     if (isAxiosError<{ message?: string }>(error)) {
       if (error.response?.status === 401) {
         clearAccessToken();
+
+        if (typeof window !== "undefined") {
+          const queryClient = getQueryClient();
+          queryClient.setQueryData(authMeQueryKey, undefined);
+          void queryClient.invalidateQueries({ queryKey: authMeQueryKey });
+        }
       }
 
       throw new Error(error.response?.data?.message ?? error.message);

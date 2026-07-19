@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import ButtonStar from "@/components/buttons/button-star";
 import BaseModal from "@/components/modal/base-modal";
 import { NasaImage } from "@/lib/nasa";
 
@@ -43,8 +44,13 @@ export default function ImageDetailModal({
               className="object-contain"
               sizes="(max-width: 768px) 100vw, 672px"
             />
+            <ButtonStar className="absolute top-2 right-2 bg-white/90 shadow-sm hover:bg-white" />
           </div>
-        ) : null}
+        ) : (
+          <div className="flex justify-end">
+            <ButtonStar />
+          </div>
+        )}
 
         <dl className="space-y-3 text-sm">
           <div>
